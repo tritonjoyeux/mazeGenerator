@@ -309,7 +309,6 @@ function tagWayPerf($tab, $x, $y, $endPosY, $endPosX)
 
 function printLab($tab, $y, $x)
 {
-    $file = fopen('lab.txt', 'w');
     echo "<span style='display: inline-block; margin: 10px'><div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
     for ($i = 0; $i < $x; $i++) {
         echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
@@ -323,16 +322,12 @@ function printLab($tab, $y, $x)
         }
         for ($coordX = 0; $coordX < $x; $coordX++) {
             if (isset($tab[$coordY][$coordX]) && $tab[$coordY][$coordX] == "w") {
-                fwrite($file, "X");
                 echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
             } else if (isset($tab[$coordY][$coordX]) && $tab[$coordY][$coordX] == "e") {
-                fwrite($file, ".");
                 echo "<div style='display:inline-block; background-color: white; height: 10px; width: 10px;'></div>";
             } else if (isset($tab[$coordY][$coordX]) && $tab[$coordY][$coordX] == "r") {
-                fwrite($file, "r");
                 echo "<div style='display:inline-block; background-color: red; height: 10px; width: 10px;'></div>";
             } else {
-                fwrite($file, "X");
                 echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
             }
         }
@@ -341,7 +336,6 @@ function printLab($tab, $y, $x)
         } else {
             echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
         }
-        fwrite($file, PHP_EOL);
         echo "<br>";
     }
     echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
@@ -349,7 +343,6 @@ function printLab($tab, $y, $x)
         echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
     }
     echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div></span>";
-    fclose($file);
 }
 
 function putInWall($tab, $y, $x, $walls)
