@@ -2,6 +2,7 @@
 
 ini_set('xdebug.max_nesting_level', 1000000);
 
+
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 /////////////////////////PERFECT////////////////////////////
@@ -229,14 +230,14 @@ function checkImp($tab, $x, $y, $endPosY, $endPosX, $check)
     return $tab;
 }
 
-function resolveLabImp($tab, $startPosY, $startPosX, $endPosY, $endPosX)
+function resolveLabImp($tab, $startPosY, $startPosX, $endPosY, $endPosX, $start)
 {
     if ($endPosX < $startPosX || $endPosY < $startPosY || $startPosY < 0 || $endPosX < 0) {
         echo "<br>Erreur lors de la saisie des infos dans resolveLabImparf";
         return false;
     }
 
-    $tab = tagWayImp($tab, $startPosX, $startPosY, $endPosY, $endPosX);
+    $tab = tagWayImp($tab, $startPosX, $startPosY, $endPosY, $endPosX, $start);
     return $tab;
 }
 
@@ -251,26 +252,27 @@ function resolveLabPerf($tab, $startPosY, $startPosX, $endPosY, $endPosX)
     return $tab;
 }
 
-function tagWayImp($tab, $x, $y, $endPosY, $endPosX)
+function tagWayImp($tab, $x, $y, $endPosY, $endPosX, $start)
 {
     if ($x == $endPosX && $y == $endPosY) {
         $tab[$y][$x] = 'r';
         printLab($tab, $endPosY + 1, $endPosX + 1);
-        //exit();
-        return true;
+        $time_elapsed_secs = microtime(true) - $start;
+        echo '<br><h2>Résolu en ' . $time_elapsed_secs . ' secondes</h2></span>';
+        exit();
     }
     if (isset($tab[$y][$x]) && $tab[$y][$x] == 'e') {
         $tab[$y][$x] = 'r';
-        $tabTemp = tagWayImp($tab, $x - 1, $y, $endPosY, $endPosX);
+        $tabTemp = tagWayImp($tab, $x - 1, $y, $endPosY, $endPosX, $start);
         if ($tabTemp != true)
             $tab = $tabTemp;
-        $tabTemp = tagWayImp($tab, $x + 1, $y, $endPosY, $endPosX);
+        $tabTemp = tagWayImp($tab, $x + 1, $y, $endPosY, $endPosX, $start);
         if ($tabTemp != true)
             $tab = $tabTemp;
-        $tabTemp = tagWayImp($tab, $x, $y - 1, $endPosY, $endPosX);
+        $tabTemp = tagWayImp($tab, $x, $y - 1, $endPosY, $endPosX, $start);
         if ($tabTemp != true)
             $tab = $tabTemp;
-        $tabTemp = tagWayImp($tab, $x, $y + 1, $endPosY, $endPosX);
+        $tabTemp = tagWayImp($tab, $x, $y + 1, $endPosY, $endPosX, $start);
         if ($tabTemp != true)
             $tab = $tabTemp;
     }
@@ -320,18 +322,18 @@ function printLab($tab, $y, $x)
             echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
         }
         for ($coordX = 0; $coordX < $x; $coordX++) {
-            if ($tab[$coordY][$coordX] == "w") {
+            if (isset($tab[$coordY][$coordX]) && $tab[$coordY][$coordX] == "w") {
                 fwrite($file, "X");
                 echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
-            } else if ($tab[$coordY][$coordX] == "e") {
+            } else if (isset($tab[$coordY][$coordX]) && $tab[$coordY][$coordX] == "e") {
                 fwrite($file, ".");
                 echo "<div style='display:inline-block; background-color: white; height: 10px; width: 10px;'></div>";
-            } else if ($tab[$coordY][$coordX] == "X") {
-                fwrite($file, "X");
-                echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
-            } else {
+            } else if (isset($tab[$coordY][$coordX]) && $tab[$coordY][$coordX] == "r") {
                 fwrite($file, "r");
                 echo "<div style='display:inline-block; background-color: red; height: 10px; width: 10px;'></div>";
+            } else {
+                fwrite($file, "X");
+                echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
             }
         }
         if ($coordY == $y - 1 && $coordX == $x) {
@@ -395,18 +397,16 @@ function goPerfect($y, $x)
     echo '<h2>Generé en ' . $time_elapsed_secs . ' secondes</h2><br>';
 
     $result = checkWay($tab, 0, 0, $y - 1, $x - 1);
-    $result2 = checkImp($tab, 0, 0, $y - 1, $x - 1, 0);
 
     while ($result != 'end') {
         $tab = labParf($x, $y);
         $result = checkWay($tab, 0, 0, $y - 1, $x - 1);
     }
     printLab($tab, $y, $x);
-
     echo '<br><h1>Resultat(s) :</h1><br><span>(Les différents resultats qui sont affichés sont différents (les plus courts))</span><br>';
 
     $start = microtime(true);
-    $tab = resolveLabPerf($tab, 0, 0, $x - 1, $y - 1);
+    $tab = resolveLabPerf($tab, 0, 0, $y - 1, $x - 1);
     $time_elapsed_secs = microtime(true) - $start;
 
     echo '<h2>Résolu en ' . $time_elapsed_secs . ' secondes</h2></span>';
@@ -434,10 +434,7 @@ function goImperfect($y, $x)
     echo '<br><h1>Resultat(s) :</h1><br>';
 
     $start = microtime(true);
-    $tab = resolveLabImp($tab, 0, 0, $x - 1, $y - 1);
-    $time_elapsed_secs = microtime(true) - $start;
-
-    echo '<br><h2>Résolu en ' . $time_elapsed_secs . ' secondes</h2></span>';
+    $tab = resolveLabImp($tab, 0, 0, $y - 1, $x - 1, $start);
 }
 
 ///////////////////////////////////////////////////////////
@@ -453,7 +450,7 @@ function goImperfect($y, $x)
 ////////////////////////////////////////////////////////////
 
 //Change this values for different maze (x->colomns y->lines)
-$x = 20;
+$x = 30;
 $y = 20;
 
 goPerfect($y, $x);
