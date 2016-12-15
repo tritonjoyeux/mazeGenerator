@@ -308,45 +308,45 @@ function tagWayPerf($tab, $x, $y, $endPosY, $endPosX)
 function printLab($tab, $y, $x)
 {
     $file = fopen('lab.txt', 'w');
-    echo "<span style='display: inline-block; margin: 10px'><img src='wall.png'>";
+    echo "<span style='display: inline-block; margin: 10px'><div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
     for ($i = 0; $i < $x; $i++) {
-        echo "<img src='wall.png'>";
+        echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
     }
-    echo "<img src='wall.png'><br>";
+    echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div><br>";
     for ($coordY = 0; $coordY < $y; $coordY++) {
         if ($coordY == 0) {
-            echo "<img src='start.png'>";
+            echo "<div style='display:inline-block; background-color: green; height: 10px; width: 10px;'></div>";
         } else {
-            echo "<img src='wall.png'>";
+            echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
         }
         for ($coordX = 0; $coordX < $x; $coordX++) {
             if ($tab[$coordY][$coordX] == "w") {
                 fwrite($file, "X");
-                echo "<img src='wall.png'>";
+                echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
             } else if ($tab[$coordY][$coordX] == "e") {
                 fwrite($file, ".");
-                echo "<img src='empty.png'>";
+                echo "<div style='display:inline-block; background-color: white; height: 10px; width: 10px;'></div>";
             } else if ($tab[$coordY][$coordX] == "X") {
                 fwrite($file, "X");
-                echo "<img src='wall.png'>";
+                echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
             } else {
                 fwrite($file, "r");
-                echo "<img src='way.png'>";
+                echo "<div style='display:inline-block; background-color: red; height: 10px; width: 10px;'></div>";
             }
         }
         if ($coordY == $y - 1 && $coordX == $x) {
-            echo "<img src='end.png'>";
+            echo "<div style='display:inline-block; background-color: blue; height: 10px; width: 10px;'></div>";
         } else {
-            echo "<img src='wall.png'>";
+            echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
         }
         fwrite($file, PHP_EOL);
         echo "<br>";
     }
-    echo "<img src='wall.png'>";
+    echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
     for ($i = 0; $i < $x; $i++) {
-        echo "<img src='wall.png'>";
+        echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div>";
     }
-    echo "<img src='wall.png'></span>";
+    echo "<div style='display:inline-block; background-color: black; height: 10px; width: 10px;'></div></span>";
     fclose($file);
 }
 
