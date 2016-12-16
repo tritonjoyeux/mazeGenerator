@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 ini_set('xdebug.max_nesting_level', 1000000);
 
 ////////////////////////////////////////////////////////////
@@ -195,35 +195,15 @@ function checkWay($tab, $x, $y, $endPosY, $endPosX)
 function checkImp($tab, $x, $y, $endPosY, $endPosX, $check)
 {
     if ($x == $endPosX && $y == $endPosY) {
-        if (is_array($tab)) {
-            $tab[$y][$x] = 'r';
-        }
-        return 1;
+        $tab[$y][$x] = 'r';
+        $_SESSION['check']++;
     } else {
         if (isset($tab[$y][$x]) && $tab[$y][$x] == 'e') {
             $tab[$y][$x] = 'r';
-            $tabTemp = checkImp($tab, $x - 1, $y, $endPosY, $endPosX, $check);
-            if ($tabTemp == 1)
-                $check += $tabTemp;
-
-            $tab = $tabTemp;
-            $tabTemp = checkImp($tab, $x + 1, $y, $endPosY, $endPosX, $check);
-            if ($tabTemp == 1)
-                $check += $tabTemp;
-
-            $tab = $tabTemp;
-            $tabTemp = checkImp($tab, $x, $y - 1, $endPosY, $endPosX, $check);
-            if ($tabTemp == 1)
-                $check += $tabTemp;
-
-            $tab = $tabTemp;
-            $tabTemp = checkImp($tab, $x, $y + 1, $endPosY, $endPosX, $check);
-            if ($tabTemp == 1)
-                $check += $tabTemp;
-            $tab = $tabTemp;
-
-            if ($check > 0)
-                return $check;
+            $tab = checkImp($tab, $x - 1, $y, $endPosY, $endPosX, $check);
+            $tab = checkImp($tab, $x + 1, $y, $endPosY, $endPosX, $check);
+            $tab = checkImp($tab, $x, $y - 1, $endPosY, $endPosX, $check);
+            $tab = checkImp($tab, $x, $y + 1, $endPosY, $endPosX, $check);
         }
     }
     return $tab;
@@ -406,6 +386,7 @@ function goPerfect($y, $x)
 
 function goImperfect($y, $x)
 {
+    $_SESSION['check'] = 0;
     echo '<span style="display: inline-block; margin-left: 3%;width: auto; vertical-align: top"><h1>Labyrinthe imparfait :</h1><br>';
 
     $start = microtime(true);
@@ -414,11 +395,12 @@ function goImperfect($y, $x)
 
     echo '<h2>Generé en ' . $time_elapsed_secs . ' secondes</h2><br>';
 
-    $result = checkImp($tab, 0, 0, $y - 1, $x - 1, 0);
+    checkImp($tab, 0, 0, $y - 1, $x - 1, 0);
 
-    while (is_array($result)) {
+    while ($_SESSION['check'] < 2) {
+        $_SESSION['check'] = 0;
         $tab = labImparf($x, $y);
-        $result = checkImp($tab, 0, 0, $y - 1, $x - 1, 0);
+        checkImp($tab, 0, 0, $y - 1, $x - 1, 0);
     }
 
     printLab($tab, $y, $x);
