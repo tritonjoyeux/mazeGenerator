@@ -1,6 +1,7 @@
 <?php
 
-ini_set('xdebug.max_nesting_level', 100000000000000000000000);
+ini_set('xdebug.max_nesting_level', 1000000);
+
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -203,22 +204,22 @@ function checkImp($tab, $x, $y, $endPosY, $endPosX, $check)
         if (isset($tab[$y][$x]) && $tab[$y][$x] == 'e') {
             $tab[$y][$x] = 'r';
             $tabTemp = checkImp($tab, $x - 1, $y, $endPosY, $endPosX, $check);
-            if (is_int($tabTemp) && $tabTemp >= 1)
+            if ($tabTemp == 1)
                 $check += $tabTemp;
 
             $tab = $tabTemp;
             $tabTemp = checkImp($tab, $x + 1, $y, $endPosY, $endPosX, $check);
-            if (is_int($tabTemp) && $tabTemp >= 1)
+            if ($tabTemp == 1)
                 $check += $tabTemp;
 
             $tab = $tabTemp;
             $tabTemp = checkImp($tab, $x, $y - 1, $endPosY, $endPosX, $check);
-            if (is_int($tabTemp) && $tabTemp >= 1)
+            if ($tabTemp == 1)
                 $check += $tabTemp;
 
             $tab = $tabTemp;
             $tabTemp = checkImp($tab, $x, $y + 1, $endPosY, $endPosX, $check);
-            if (is_int($tabTemp) && $tabTemp >= 1)
+            if ($tabTemp == 1)
                 $check += $tabTemp;
             $tab = $tabTemp;
 
@@ -436,6 +437,7 @@ function goImperfect($y, $x)
 ///////////////////////////////////////////////////////////
 
 
+
 ////////////////////////////////////////////////////////////
 ///////////////////////MAIN/////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -448,11 +450,9 @@ if (isset($_GET) && isset($_GET['col']) && isset($_GET['line'])) {
     $x = 30;
     $y = 20;
 }
-
 ?>
     <h1>Pour changer la taille du tableau inserez "?line=y&col=x"</h1>
 <?php
-
 goPerfect($y, $x);
 goImperfect($y, $x);
 
