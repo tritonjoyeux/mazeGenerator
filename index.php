@@ -1,7 +1,6 @@
 <?php
 
-ini_set('xdebug.max_nesting_level', 1000000);
-
+ini_set('xdebug.max_nesting_level', 100000000000000000000000);
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -442,7 +441,7 @@ function goImperfect($y, $x)
 ////////////////////////////////////////////////////////////
 
 //Change this values for different maze (x->colomns y->lines)
-if (isset($_GET) && isset($_GET['col']) && isset($_GET['line']) && is_int($_GET['line']) && is_int($_GET['col'])) {
+if (isset($_GET) && isset($_GET['col']) && isset($_GET['line'])) {
     $x = $_GET['col'];
     $y = $_GET['line'];
 } else {
