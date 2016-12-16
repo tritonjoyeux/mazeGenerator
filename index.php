@@ -204,22 +204,22 @@ function checkImp($tab, $x, $y, $endPosY, $endPosX, $check)
         if (isset($tab[$y][$x]) && $tab[$y][$x] == 'e') {
             $tab[$y][$x] = 'r';
             $tabTemp = checkImp($tab, $x - 1, $y, $endPosY, $endPosX, $check);
-            if ($tabTemp == 1)
+            if (is_int($tabTemp) && $tabTemp >= 1)
                 $check += $tabTemp;
 
             $tab = $tabTemp;
             $tabTemp = checkImp($tab, $x + 1, $y, $endPosY, $endPosX, $check);
-            if ($tabTemp == 1)
+            if (is_int($tabTemp) && $tabTemp >= 1)
                 $check += $tabTemp;
 
             $tab = $tabTemp;
             $tabTemp = checkImp($tab, $x, $y - 1, $endPosY, $endPosX, $check);
-            if ($tabTemp == 1)
+            if (is_int($tabTemp) && $tabTemp >= 1)
                 $check += $tabTemp;
 
             $tab = $tabTemp;
             $tabTemp = checkImp($tab, $x, $y + 1, $endPosY, $endPosX, $check);
-            if ($tabTemp == 1)
+            if (is_int($tabTemp) && $tabTemp >= 1)
                 $check += $tabTemp;
             $tab = $tabTemp;
 
@@ -437,14 +437,22 @@ function goImperfect($y, $x)
 ///////////////////////////////////////////////////////////
 
 
-
 ////////////////////////////////////////////////////////////
 ///////////////////////MAIN/////////////////////////////////
 ////////////////////////////////////////////////////////////
 
 //Change this values for different maze (x->colomns y->lines)
-$x = 30;
-$y = 20;
+if (isset($_GET) && isset($_GET['col']) && isset($_GET['line']) && is_int($_GET['line']) && is_int($_GET['col'])) {
+    $x = $_GET['col'];
+    $y = $_GET['line'];
+} else {
+    $x = 30;
+    $y = 20;
+}
+
+?>
+    <h1>Pour changer la taille du tableau inserez "?line=y&col=x"</h1>
+<?php
 
 goPerfect($y, $x);
 goImperfect($y, $x);
